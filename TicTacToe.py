@@ -14,21 +14,33 @@ class TicTacToe:
 
     def playermove(self):
         rep = 1
-        move = input("choose a field: ")
-        try:
-            move = int(move)
-        except ValueError:
-            print("enter a number\n")
-        except 1 >= move >= 9:
-            print("Value must be between 1 and 9!")
-        if self.field[move] != "X" or "O":
-            if (rep % 2) == 0:
-                self.field[move] = "O"
-                rep += 1
+        while True:
+            self.printfield()
+            move = input("choose a field: ")
+            try:
+                move = int(move)
+            except ValueError:
+                print("enter a number\r")
+                continue
+            if 1 >= move >= 9:
+                print("Value must be between 1 and 9!\r")
+                continue
+            if self.field[move] == "X" or self.field[move] == "O":
+                print("This field is allready occupied!\r")
+                continue
             else:
-                self.field[move] = "X"
-                rep += 1
+                if (rep % 2) == 0:
+                    self.field[move] = "O"
+                    rep += 1
+                else:
+                    self.field[move] = "X"
+                    rep += 1
+            if rep == 10:
+                break
 
     def activgame(self):
-        self.printfield()
         self.playermove()
+
+
+Marco = TicTacToe("marco")
+Marco.activgame()
