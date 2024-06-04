@@ -12,6 +12,25 @@ class TicTacToe:
         print(self.field[4] + "|" + self.field[5] + "|" + self.field[6])
         print(self.field[7] + "|" + self.field[8] + "|" + self.field[9])
 
+    def checkwin(self, rep):
+        if (
+                (self.field[1] == self.field[2] == self.field[3]) or
+                (self.field[4] == self.field[5] == self.field[6]) or
+                (self.field[7] == self.field[8] == self.field[9]) or
+                (self.field[1] == self.field[4] == self.field[7]) or
+                (self.field[2] == self.field[5] == self.field[8]) or
+                (self.field[3] == self.field[6] == self.field[9]) or
+                (self.field[1] == self.field[5] == self.field[9]) or
+                (self.field[3] == self.field[5] == self.field[7])
+        ):
+            if (rep % 2) == 0:
+                print("Player O won!")
+                return True
+            else:
+                print("Player X won!")
+                return True
+        return False
+
     def playermove(self):
         rep = 1
         while True:
@@ -36,8 +55,12 @@ class TicTacToe:
                     self.field[move] = "X"
                     rep += 1
             if rep == 10:
+                "draw"
                 break
-    def checkwin(self):
+            if self.checkwin(rep):
+                break
+
+
 
     def activgame(self):
         self.playermove()
