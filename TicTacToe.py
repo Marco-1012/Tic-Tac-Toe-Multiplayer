@@ -37,6 +37,7 @@ class TicTacToe:
                     rep += 1
             if rep == 10:
                 break
+    def checkwin(self):
 
     def activgame(self):
         self.playermove()

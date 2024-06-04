@@ -63,9 +63,9 @@ try:
     move = int(move)
 except ValueError:
     print("enter a number\n")
-except 1 >= move >= 9:
+if 1 >= move >= 9:
     print("Value must be between 1 and 9!")
-except self.field[move] == "X" or "O":
+if self.field[move] == "X" or "O":
     print("This field is allready occupied!")
 ```
 If there are no exceptions the players will alternatingly get *X* and *O*'s
@@ -80,3 +80,9 @@ else:
 ```
 After each move by the player the repetition-counter will be increased by one.
 
+
+---
+
+# GUI
+
+Dani mach des!!
