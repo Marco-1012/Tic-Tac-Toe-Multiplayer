@@ -1,3 +1,6 @@
+import socket
+
+
 class TicTacToe:
     field = [" ",
              "1", "2", "3",
@@ -6,6 +9,29 @@ class TicTacToe:
 
     def __init__(self, username):
         self.player = username
+        self.score = 0
+        self.rep = 1
+    def decider(self):
+        while True:
+            try:
+                choice = str(input("Do you want to create a game (c) or join a game (j): "))
+            except ValueError:
+                print("Please decide between (c/j): ")
+            if choice not in ("c", "j"):
+                print("Please decide between (c/j): ")
+                continue
+            else:
+                if choice == "c":
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.bind(("", 55000))
+                    s.listen(1)
+                    print(socket.gethostbyname(socket.gethostname()))
+                    break
+                else:
+                    ip = input("please enter the IP-Address of the other player: ")
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.connect((ip, 55000))
+                    break
 
     def printfield(self):
         print(self.field[1] + "|" + self.field[2] + "|" + self.field[3])
@@ -32,7 +58,6 @@ class TicTacToe:
         return False
 
     def playermove(self):
-        rep = 1
         while True:
             self.printfield()
             move = input("choose a field: ")
@@ -48,21 +73,20 @@ class TicTacToe:
                 print("This field is allready occupied!\r")
                 continue
             else:
-                if (rep % 2) == 0:
+                if (self.rep % 2) == 0:
                     self.field[move] = "O"
-                    rep += 1
+                    self.rep += 1
                 else:
                     self.field[move] = "X"
-                    rep += 1
-            if rep == 10:
+                    self.rep += 1
+            if self.rep == 10:
                 "draw"
                 break
-            if self.checkwin(rep):
+            if self.checkwin(self.rep-1):
                 break
 
-
-
     def activgame(self):
+        self.decider()
         self.playermove()
 
 

@@ -115,8 +115,38 @@ if rep == 10:
     "draw"
     break
 ```
+---
+# TicTacToe Multiplayer extension
+For the game to work in multiplayer, the socket library will be used.</br>
+TicTacToe will be played peer to peer, which means the programm will be either working as client and as server.</br>
+When starting the .py the user will be asked if he wants to create or join a game, this will decide if the user is the server or the Client.</br>
+Before we can make a server or a client we need to filter the input in the same way as in the base game.
+```python
+def decider(self):
+    while True:
+        try:
+            choice = str(input("Do you want to create a game (c) or join a game (j): "))
+        except ValueError:
+            print("Please decide between (c/j): ")
+        if choice not in ("c", "j"):
+            print("Please decide between (c/j): ")
+            continue
+```
 
-
+```python
+        else:
+            if choice == "c":
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.bind(("", 55000))
+                s.listen(1)
+                print(socket.gethostbyname(socket.gethostname()))
+                break
+            else:
+                ip = input("please enter the IP-Address of the other player: ")
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.connect((ip, 55000))
+                break
+```
 ---
 
 # GUI
