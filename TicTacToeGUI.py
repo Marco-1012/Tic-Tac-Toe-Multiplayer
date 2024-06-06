@@ -1,21 +1,20 @@
-import tkinter as tk
-from PIL import Image, ImageTk
+from tkinter import *
 
-def Nachricht():
-    Label.config(image=Bild)
-    Label.image = Bild  # Keep a reference to avoid garbage collection
+buttons=[]
 
-fenster = tk.Tk()
-fenster.title("Test")
+fenster = Tk()
 
-# Load the image using Pillow
-original_image = Image.open("Test.jpeg")
-Bild = ImageTk.PhotoImage(original_image)
+fenster.geometry("400x400")
 
-Button = tk.Button(fenster, text="Knopf", command=Nachricht)
-Button.pack(pady=20)
+for r in range(3):
+    row=[]
 
-Label = tk.Label(fenster)
-Label.pack(pady=20)
-
+    for c in range(3):
+        b = Button(text = "Hallo")
+        b.grid(row = r, column = c)
+        row.append(b)
+    buttons.append(row)
+    
+print(buttons)
+buttons[0][1].config(text = "Tshuss")
 fenster.mainloop()
