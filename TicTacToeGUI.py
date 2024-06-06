@@ -1,11 +1,20 @@
 from tkinter import *
+from TicTacToe import TicTacToe
 
 def button_press(row, col):
 
-    buttons[row][col].config(text = "x", state = DISABLED)
+    if TicTacToe.rep%2 == 0:
+    
+        buttons[row][col].config(text = "0", state = DISABLED)
+    else:
+        buttons[row][col].config(text = "x", state = DISABLED)
+
     pressedButtonrow = row
     pressedButtoncol = col
     print(pressedButtonrow, pressedButtoncol)
+
+#Marco objekt
+Marco = TicTacToe("Marco")
 
 buttons=[]
 pressedButtonrow = 0
