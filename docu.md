@@ -80,6 +80,42 @@ else:
 ```
 After each move by the player the repetition-counter will be increased by one.
 
+## Check for a winner
+To check for a winner the function **checkwinner()** has been added. </br>
+For this every single winning condition has been written out with ...
+* the first three being the rows
+* the next three for the columns
+* and the last two for the diagonals
+```python
+def checkwin(self, rep):
+    if (
+            (self.field[1] == self.field[2] == self.field[3]) or
+            (self.field[4] == self.field[5] == self.field[6]) or
+            (self.field[7] == self.field[8] == self.field[9]) or
+            (self.field[1] == self.field[4] == self.field[7]) or
+            (self.field[2] == self.field[5] == self.field[8]) or
+            (self.field[3] == self.field[6] == self.field[9]) or
+            (self.field[1] == self.field[5] == self.field[9]) or
+            (self.field[3] == self.field[5] == self.field[7])
+    ):
+```
+In case one of the statements has been fullfiled, the player at move will win and the function returns TRUE, if not the function will return FALSE, meaning nobody won yet
+```python
+if (rep % 2) == 0:
+    print("Player O won!")
+    return True
+else:
+    print("Player X won!")
+    return True
+return False
+```
+For the case of a draw following lines have been added to the **playermove()** function:
+```python
+if rep == 10:
+    "draw"
+    break
+```
+
 
 ---
 
