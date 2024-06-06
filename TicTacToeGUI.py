@@ -2,11 +2,14 @@ from tkinter import *
 
 def button_press(row, col):
 
-    buttons[row][col].grid_forget()
-    ersetzen = Label(fenster, text = "x")
-    ersetzen.grid(row = row, column = col)
+    buttons[row][col].config(text = "x", state = DISABLED)
+    pressedButtonrow = row
+    pressedButtoncol = col
+    print(pressedButtonrow, pressedButtoncol)
 
 buttons=[]
+pressedButtonrow = 0
+pressedButtoncol = 0
 
 fenster = Tk()
 
