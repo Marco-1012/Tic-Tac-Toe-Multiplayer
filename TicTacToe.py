@@ -38,7 +38,6 @@ class TicTacToe:
                     self.socket.connect((ip, 55000))
                     return choice
 
-
     def printfield(self):
         print(self.field[1] + "|" + self.field[2] + "|" + self.field[3])
         print(self.field[4] + "|" + self.field[5] + "|" + self.field[6])
