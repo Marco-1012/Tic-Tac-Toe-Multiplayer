@@ -1,39 +1,34 @@
 from tkinter import *
-from TicTacToe import TicTacToe
 
-def button_press(row, col):
-
-    if TicTacToe.rep%2 == 0:
-    
-        buttons[row][col].config(text = "0", state = DISABLED)
+def button_press(row, col, counter):
+    if counter[0] % 2 == 0:
+        buttons[row][col].config(text="0", state=DISABLED)
     else:
-        buttons[row][col].config(text = "x", state = DISABLED)
+        buttons[row][col].config(text="x", state=DISABLED)
 
     pressedButtonrow = row
     pressedButtoncol = col
-    print(pressedButtonrow, pressedButtoncol)
+    counter[0] += 1
+    print(pressedButtonrow, pressedButtoncol, counter[0])
 
-#Marco objekt
-Marco = TicTacToe("Marco")
 
-buttons=[]
+buttons = []
 pressedButtonrow = 0
 pressedButtoncol = 0
+counter = [0] 
 
 fenster = Tk()
-
 fenster.geometry("420x430")
 
 for r in range(3):
-    row=[]
+    row = []
 
     for c in range(3):
-        b = Button(text = "Hallo", height = 9, width = 19, command = lambda r = r, c = c: button_press(r, c))
-        b.grid(row = r, column = c)
+        b = Button(text="", height=9, width=19, command=lambda r=r, c=c: button_press(r, c, counter))
+        b.grid(row=r, column=c)
         row.append(b)
     buttons.append(row)
     
 print(buttons)
-buttons[0][1].config(text = "Tshuss")
 
 fenster.mainloop()
