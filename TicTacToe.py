@@ -4,7 +4,6 @@ import threading
 class TicTacToe:
     def __init__(self, username):
         self.player = username
-        self.score = 0
         self.rep = 1
         self.socket = None
         self.conn = None
@@ -13,6 +12,8 @@ class TicTacToe:
                       "4", "5", "6",
                       "7", "8", "9"]
         self.game_over = False
+        self.is_host = False
+        self.lock = threading.Lock()
 
     def decider(self):
         while True:
@@ -22,6 +23,7 @@ class TicTacToe:
                 continue
             else:
                 if choice == "c":
+                    self.is_host = True
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket.bind(("", 55000))
                     self.socket.listen(1)
@@ -30,9 +32,10 @@ class TicTacToe:
                     print(f"Connected to {addr}")
                     return choice
                 else:
-                    ip = input("please enter the IP-Address of the other player: ").strip()
+                    ip = input("Please enter the IP-Address of the other player: ").strip()
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket.connect((ip, 55000))
+                    self.conn = self.socket
                     return choice
 
     def checkwin(self):
@@ -47,21 +50,23 @@ class TicTacToe:
         return False
 
     def playermove(self, move):
-        if self.field[move] == "X" or self.field[move] == "O":
-            return False
-        if (self.rep % 2) == 0:
-            self.field[move] = "O"
-        else:
-            self.field[move] = "X"
-        self.rep += 1
-        return True
+        with self.lock:
+            if self.field[move] == "X" or self.field[move] == "O":
+                return False
+            if (self.rep % 2) == 0:
+                self.field[move] = "O"
+            else:
+                self.field[move] = "X"
+            self.rep += 1
+            return True
 
     def opponent_move(self, move):
-        if (self.rep % 2) == 0:
-            self.field[move] = "O"
-        else:
-            self.field[move] = "X"
-        self.rep += 1
+        with self.lock:
+            if (self.rep % 2) == 0:
+                self.field[move] = "O"
+            else:
+                self.field[move] = "X"
+            self.rep += 1
 
     def activegame(self):
         choice = self.decider()
@@ -77,3 +82,9 @@ class TicTacToe:
     def join_game(self):
         while not self.game_over:
             pass  # Game will be handled by GUI
+
+    def send_move(self, move):
+        self.conn.sendall(str(move).encode())
+
+    def receive_move(self):
+        return int(self.conn.recv(1024).decode())
