@@ -2,9 +2,9 @@ from tkinter import *
 
 def button_press(row, col, counter):
     if counter[0] % 2 == 0:
-        buttons[row][col].config(text="0", state=DISABLED)
+        buttons[row][col].config(text="X", state=DISABLED)
     else:
-        buttons[row][col].config(text="x", state=DISABLED)
+        buttons[row][col].config(text="O", state=DISABLED)
 
     pressedButtonrow = row
     pressedButtoncol = col
