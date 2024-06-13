@@ -25,15 +25,17 @@ class TicTacToe:
                 continue
             else:
                 if choice == "c":
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.bind(("", 55000))
-                    s.listen(1)
-                    print(socket.gethostbyname(socket.gethostname()))
+                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.socket.bind(("", 55000))
+                    self.socket.listen(1)
+                    print("Waiting for connection...")
+                    self.conn, addr = self.socket.accept()
+                    print(f"Connected to {addr}")
                     return choice
                 else:
                     ip = input("please enter the IP-Address of the other player: ")
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.connect((ip, 55000))
+                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.socket.connect((ip, 55000))
                     return choice
 
 
