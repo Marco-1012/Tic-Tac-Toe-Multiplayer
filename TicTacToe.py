@@ -14,6 +14,7 @@ class TicTacToe:
         self.game_over = False
         self.is_host = False
         self.lock = threading.Lock()
+        self.current_turn = 'X'  # Track whose turn it is
 
     def decider(self):
         while True:
@@ -24,6 +25,7 @@ class TicTacToe:
             else:
                 if choice == "c":
                     self.is_host = True
+                    self.current_turn = 'X'  # Host starts with 'X'
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket.bind(("", 55000))
                     self.socket.listen(1)
@@ -32,6 +34,7 @@ class TicTacToe:
                     print(f"Connected to {addr}")
                     return choice
                 else:
+                    self.current_turn = 'O'  # Guest starts with 'O'
                     ip = input("Please enter the IP-Address of the other player: ").strip()
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket.connect((ip, 55000))
@@ -53,19 +56,13 @@ class TicTacToe:
         with self.lock:
             if self.field[move] == "X" or self.field[move] == "O":
                 return False
-            if (self.rep % 2) == 0:
-                self.field[move] = "O"
-            else:
-                self.field[move] = "X"
+            self.field[move] = self.current_turn
             self.rep += 1
             return True
 
     def opponent_move(self, move):
         with self.lock:
-            if (self.rep % 2) == 0:
-                self.field[move] = "O"
-            else:
-                self.field[move] = "X"
+            self.field[move] = 'X' if self.current_turn == 'O' else 'O'
             self.rep += 1
 
     def activegame(self):
