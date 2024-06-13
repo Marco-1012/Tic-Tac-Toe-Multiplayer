@@ -1,5 +1,5 @@
 from tkinter import *
-from tic_tac_toe import TicTacToe
+from TicTacToe import TicTacToe
 import threading
 
 def button_press(row, col):
