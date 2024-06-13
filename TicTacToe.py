@@ -62,7 +62,7 @@ class TicTacToe:
 
     def opponent_move(self, move):
         with self.lock:
-            self.field[move] = 'X' if self.current_turn == 'O' else 'O'
+            self.field[move] = 'O' if self.current_turn == 'X' else 'X'
             self.rep += 1
 
     def activegame(self):

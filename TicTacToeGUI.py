@@ -3,26 +3,27 @@ from TicTacToe import TicTacToe
 import threading
 
 def button_press(row, col):
-    move = row * 3 + col + 1
-    if ttt.playermove(move):
-        buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
-        if ttt.checkwin():
-            result = f"Player {ttt.current_turn} won!"
-            end_game(result)
-        elif ttt.rep == 10:
-            end_game("Draw!")
-        else:
-            ttt.send_move(move)
-            ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
-            fenster.after(100, wait_for_opponent_move)
+    if ttt.current_turn == ('X' if ttt.is_host else 'O'):  # Only allow move if it's the player's turn
+        move = row * 3 + col + 1
+        if ttt.playermove(move):
+            buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
+            if ttt.checkwin():
+                result = f"Player {ttt.current_turn} won!"
+                end_game(result)
+            elif ttt.rep == 10:
+                end_game("Draw!")
+            else:
+                ttt.send_move(move)
+                ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+                fenster.after(100, wait_for_opponent_move)
 
 def wait_for_opponent_move():
     move = ttt.receive_move()
     row, col = divmod(move - 1, 3)
     ttt.opponent_move(move)
-    buttons[row][col].config(text='X' if ttt.current_turn == 'O' else 'O', state=DISABLED)
+    buttons[row][col].config(text='O' if ttt.current_turn == 'X' else 'X', state=DISABLED)
     if ttt.checkwin():
-        result = f"Player {'X' if ttt.current_turn == 'O' else 'O'} won!"
+        result = f"Player {'O' if ttt.current_turn == 'X' else 'X'} won!"
         end_game(result)
     elif ttt.rep == 10:
         end_game("Draw!")
