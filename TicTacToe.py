@@ -11,6 +11,9 @@ class TicTacToe:
         self.player = username
         self.score = 0
         self.rep = 1
+        self.socket = None
+        self.conn = None
+
     def decider(self):
         while True:
             try:
@@ -26,12 +29,13 @@ class TicTacToe:
                     s.bind(("", 55000))
                     s.listen(1)
                     print(socket.gethostbyname(socket.gethostname()))
-                    break
+                    return choice
                 else:
                     ip = input("please enter the IP-Address of the other player: ")
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     s.connect((ip, 55000))
-                    break
+                    return choice
+
 
     def printfield(self):
         print(self.field[1] + "|" + self.field[2] + "|" + self.field[3])
@@ -49,7 +53,7 @@ class TicTacToe:
                 (self.field[1] == self.field[5] == self.field[9]) or
                 (self.field[3] == self.field[5] == self.field[7])
         ):
-            if (rep % 2) == 0:
+            if (self.rep % 2) == 0:
                 print("Player O won!")
                 return True
             else:
@@ -66,29 +70,61 @@ class TicTacToe:
             except ValueError:
                 print("enter a number\r")
                 continue
-            if 1 >= move >= 9:
+            if not (1 <= move <= 9):
                 print("Value must be between 1 and 9!\r")
                 continue
             if self.field[move] == "X" or self.field[move] == "O":
-                print("This field is allready occupied!\r")
+                print("This field is already occupied!\r")
                 continue
             else:
                 if (self.rep % 2) == 0:
                     self.field[move] = "O"
-                    self.rep += 1
                 else:
                     self.field[move] = "X"
-                    self.rep += 1
+                self.rep += 1
+
             if self.rep == 10:
-                "draw"
+                print("Draw!")
+                self.printfield()
                 break
-            if self.checkwin(self.rep-1):
+            if self.checkwin(self.rep - 1):
+                self.printfield()
                 break
 
-    def activgame(self):
-        self.decider()
-        self.playermove()
+            return move
+
+    def opponent_move(self, move):
+        if (self.rep % 2) == 0:
+            self.field[move] = "O"
+        else:
+            self.field[move] = "X"
+        self.rep += 1
+
+    def activegame(self):
+        choice = self.decider()
+        if choice == "c":
+            while True:
+                move = self.playermove()
+                self.conn.sendall(str(move).encode())
+                if self.rep == 10 or self.checkwin(self.rep - 1):
+                    break
+                print("Waiting for opponent's move...")
+                data = self.conn.recv(1024).decode()
+                self.opponent_move(int(data))
+                if self.rep == 10 or self.checkwin(self.rep - 1):
+                    break
+        else:
+            while True:
+                print("Waiting for opponent's move...")
+                data = self.socket.recv(1024).decode()
+                self.opponent_move(int(data))
+                if self.rep == 10 or self.checkwin(self.rep - 1):
+                    break
+                move = self.playermove()
+                self.socket.sendall(str(move).encode())
+                if self.rep == 10 or self.checkwin(self.rep - 1):
+                    break
 
 
 Marco = TicTacToe("marco")
-Marco.activgame()
+Marco.activegame()
