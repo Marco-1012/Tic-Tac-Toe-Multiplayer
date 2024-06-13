@@ -134,19 +134,23 @@ def decider(self):
 ```
 
 ```python
+else:
+    if choice == "c":
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.bind(("", 55000))
+            s.listen(1)
+            print(socket.gethostbyname(socket.gethostname()))
+            break
         else:
-            if choice == "c":
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.bind(("", 55000))
-                s.listen(1)
-                print(socket.gethostbyname(socket.gethostname()))
-                break
-            else:
-                ip = input("please enter the IP-Address of the other player: ")
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.connect((ip, 55000))
-                break
+            ip = input("please enter the IP-Address of the other player: ")
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                s.connect((ip, 55000))
+            break
 ```
+After choosing to be the server the user should wait until another player joins. 
+```python
+
+```
+
 ---
 
 # GUI
