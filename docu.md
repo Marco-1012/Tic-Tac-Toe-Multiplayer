@@ -155,4 +155,47 @@ After choosing to be the server the user should wait until another player joins.
 
 # GUI
 
-Dani mach des!!
+The Goal is to play the TicTacToe Multiplayer with a graphic interface
+
+# Modules needed
+
+We need to import modules in order to make the GUI work:
+
+```python
+from tkinter import *
+from TicTacToe import TicTacToe
+import threading
+```
+
+The module TicTacToe is the imported function from the TicTacToe script. We need to implement in order to make it
+possible to use the functions in the script.
+
+# Button press function
+
+First we need a function that let's the programm know what happens with the Button press. It needs to know if it
+has to place a X or an O on the field:
+
+```python
+def button_press(row, col):
+    if ttt.current_turn == ('X' if ttt.is_host else 'O'): 
+        move = row * 3 + col
+        if ttt.playermove(move):
+            buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
+            if ttt.checkwin():
+                result = f"Player {ttt.current_turn} won!"
+                end_game(result)
+            elif ttt.rep == 10:
+                end_game("Draw!")
+            else:
+                ttt.send_move(move)
+                ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+                fenster.after(100, wait_for_opponent_move)
+```
+Where ttt is the Object from the TicTacToe script and is defined a little later:
+
+```python
+ttt = TicTacToe("marco")
+```
+It is checked if the player is the Host. The Host always begins and has the X.
+If the player makes a move it is checked with the **playermove** Function. After it is checked the correspondig Button is disabled
+and replaced with X or O

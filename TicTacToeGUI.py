@@ -4,7 +4,7 @@ import threading
 
 def button_press(row, col):
     if ttt.current_turn == ('X' if ttt.is_host else 'O'):  # Only allow move if it's the player's turn
-        move = row * 3 + col + 1
+        move = row * 3 + col
         if ttt.playermove(move):
             buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
             if ttt.checkwin():
@@ -19,7 +19,7 @@ def button_press(row, col):
 
 def wait_for_opponent_move():
     move = ttt.receive_move()
-    row, col = divmod(move - 1, 3)
+    row, col = divmod(move, 3)
     ttt.opponent_move(move)
     buttons[row][col].config(text='O' if ttt.current_turn == 'X' else 'X', state=DISABLED)
     if ttt.checkwin():
