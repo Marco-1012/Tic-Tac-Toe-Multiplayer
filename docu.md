@@ -199,3 +199,7 @@ ttt = TicTacToe("marco")
 It is checked if the player is the Host. The Host always begins and has the X.
 If the player makes a move it is checked with the **playermove** Function. After it is checked the correspondig Button is disabled
 and replaced with X or O
+
+After ever round it is checked if there is a winner with the function **checkwin**. If somone won the current player will get a message saying "won".
+
+The rep variable is incremented by one each time a move is made 
