@@ -202,4 +202,44 @@ and replaced with X or O
 
 After ever round it is checked if there is a winner with the function **checkwin**. If somone won the current player will get a message saying "won".
 
-The rep variable is incremented by one each time a move is made 
+The rep variable is incremented by one each time a move is made and if this varaible reaches 10 the game will know it is a draw
+
+At last if the rep variable is not 10 the that is made is transmitted to the other player.
+
+
+# Wait for opponent move Funtion
+
+This function does like the name implies wat for the opponent to move
+
+```python
+def wait_for_opponent_move():
+    move = ttt.receive_move()
+    row, col = divmod(move, 3)
+    ttt.opponent_move(move)
+    buttons[row][col].config(text='O' if ttt.current_turn == 'X' else 'X', state=DISABLED)
+    if ttt.checkwin():
+        result = f"Player {'O' if ttt.current_turn == 'X' else 'X'} won!"
+        end_game(result)
+    elif ttt.rep == 10:
+        end_game("Draw!")
+    else:
+        ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+```
+
+It waits to receive a move from the other player. 
+After that the funtcion checks if there is a win or a draw and rewards the player who won
+At the end of this function it checks if it needs to replace the button with O or with X
+
+# End game
+
+Now we have to know when the game is over.
+
+```python
+def end_game(result):
+    ttt.game_over = True
+    for row in buttons:
+        for button in row:
+            button.config(state=DISABLED)
+    result_label.config(text=result)
+```
+If the game over variable from the Script is **True** it disables all Buttons and changes the Label to **result**
