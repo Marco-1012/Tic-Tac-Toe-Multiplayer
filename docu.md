@@ -243,3 +243,29 @@ def end_game(result):
     result_label.config(text=result)
 ```
 If the game over variable from the Script is **True** it disables all Buttons and changes the Label to **result**
+
+# Changes to TicTacToe script
+
+In order to make the two codes work together we have to change the TicTacToe script too.
+
+First we need to add some things to the **__innit__** funktion:
+
+```python
+    self.game_over = False
+    self.is_host = False
+    self.lock = threading.Lock()
+    self.current_turn = 'X'
+```
+__self.game_over = False__ is to let the game know its cur state (CCan be set to True)
+__self.is_host = False__ needs to be set in order to know if the current script ist the host (Can be set to true)
+__self.lock = threading.Lock()__ is to manage thread synchronization
+__self.current_turn = 'X'__ Is added to track whose turn it is
+
+The Function **printfield** was also removed because it isn't neede anymore when the game is  played with the GUI:
+
+```python
+ def printfield(self):
+        print(self.field[1] + "|" + self.field[2] + "|" + self.field[3])
+        print(self.field[4] + "|" + self.field[5] + "|" + self.field[6])
+        print(self.field[7] + "|" + self.field[8] + "|" + self.field[9])
+```

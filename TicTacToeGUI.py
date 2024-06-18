@@ -3,7 +3,7 @@ from TicTacToe import TicTacToe
 import threading
 
 def button_press(row, col):
-    if ttt.current_turn == ('X' if ttt.is_host else 'O'):  # Only allow move if it's the player's turn
+    if ttt.current_turn == ('X' if ttt.is_host else 'O'): 
         move = row * 3 + col
         if ttt.playermove(move):
             buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
