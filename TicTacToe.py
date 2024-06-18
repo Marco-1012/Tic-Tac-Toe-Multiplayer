@@ -7,10 +7,7 @@ class TicTacToe:
         self.rep = 1
         self.socket = None
         self.conn = None
-        self.field = [" ",
-                      "1", "2", "3",
-                      "4", "5", "6",
-                      "7", "8", "9"]
+        self.field = [" "] * 10  # Adjusted for 1-based indexing
         self.game_over = False
         self.is_host = False
         self.lock = threading.Lock()
@@ -48,11 +45,12 @@ class TicTacToe:
             (1, 5, 9), (3, 5, 7)
         ]
         for pattern in win_patterns:
-            if self.field[pattern[0]] == self.field[pattern[1]] == self.field[pattern[2]]:
+            if self.field[pattern[0]] == self.field[pattern[1]] == self.field[pattern[2]] and self.field[pattern[0]] != " ":
                 return True
         return False
 
     def playermove(self, move):
+        print("playermove activated")
         with self.lock:
             if self.field[move] == "X" or self.field[move] == "O":
                 return False
@@ -61,11 +59,13 @@ class TicTacToe:
             return True
 
     def opponent_move(self, move):
+        print("opponent move started")
         with self.lock:
             self.field[move] = 'O' if self.current_turn == 'X' else 'X'
             self.rep += 1
 
     def activegame(self):
+        print("game is active")
         choice = self.decider()
         if choice == "c":
             threading.Thread(target=self.host_game).start()
@@ -81,7 +81,9 @@ class TicTacToe:
             pass  # Game will be handled by GUI
 
     def send_move(self, move):
+        print("sendig move")
         self.conn.sendall(str(move).encode())
 
     def receive_move(self):
+        print("recivieng move")
         return int(self.conn.recv(1024).decode())

@@ -18,6 +18,7 @@ def button_press(row, col):
                 fenster.after(100, wait_for_opponent_move)
 
 def wait_for_opponent_move():
+    print("Waiting for opponent move")
     move = ttt.receive_move()
     row, col = divmod(move, 3)
     ttt.opponent_move(move)
@@ -29,6 +30,7 @@ def wait_for_opponent_move():
         end_game("Draw!")
     else:
         ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+        print("oponenet move ended")
 
 def end_game(result):
     ttt.game_over = True
