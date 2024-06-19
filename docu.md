@@ -118,6 +118,8 @@ if rep == 10:
 ---
 # TicTacToe Multiplayer extension
 For the game to work in multiplayer, the socket library will be used.</br>
+
+## Decision
 TicTacToe will be played peer to peer, which means the programm will be either working as client and as server.</br>
 When starting the .py the user will be asked if he wants to create or join a game, this will decide if the user is the server or the Client.</br>
 Before we can make a server or a client we need to filter the input in the same way as in the base game.
@@ -132,7 +134,7 @@ def decider(self):
             print("Please decide between (c/j): ")
             continue
 ```
-
+The choice will define the options given, to play you need to know the other players ip address.
 ```python
 else:
     if choice == "c":
@@ -143,13 +145,73 @@ else:
             break
         else:
             ip = input("please enter the IP-Address of the other player: ")
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                s.connect((ip, 55000))
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                
+            s.connect((ip, 55000))
             break
 ```
 After choosing to be the server the user should wait until another player joins. 
 ```python
-
+        print("Waiting for connection...")
+        self.conn, addr = self.socket.accept()
+        print(f"Connected to {addr}")
 ```
+
+## The game itself
+After the player has decided we can start the game. The Server will begin as **X**. To implement this the activegame() function has been changed.
+
+The server will take following steps after deciding do be the server:
+1. make a move
+2. send the move to the other player
+3. check if this move won the game
+4. wait for opponents move and transmission
+5. check if the other player won
+```python
+def activegame(self):
+     choice = self.decider()
+    if choice == "c":
+        while True:
+            move = self.playermove()
+            self.conn.sendall(str(move).encode())
+            if self.rep == 10 or self.checkwin(self.rep - 1):
+                break
+            print("Waiting for opponent's move...")
+            data = self.conn.recv(1024).decode()
+            self.opponent_move(int(data))
+            if self.rep == 10 or self.checkwin(self.rep - 1):
+                break
+```
+While the server is doing this the client will repeat following steps:
+1. wait for opponents move (because the server starts)
+2. check if the other player won
+3. make a move
+4. send the move to the other player
+5. check if this move won the game
+```python
+else:
+    while True:
+        print("Waiting for opponent's move...")
+        data = self.socket.recv(1024).decode()
+        self.opponent_move(int(data))
+        if self.rep == 10 or self.checkwin(self.rep - 1):
+            break
+        move = self.playermove()
+        self.socket.sendall(str(move).encode())
+        if self.rep == 10 or self.checkwin(self.rep - 1):
+            break
+```
+
+## get the other players move on the board
+
+To bring the other players move onto the board with the right sign the before mentioned opponent_move() function has been added.
+```python
+def opponent_move(self, move):
+    if (self.rep % 2) == 0:
+        self.field[move] = "O"
+    else:
+        self.field[move] = "X"
+    self.rep += 1
+```
+
 
 ---
 
