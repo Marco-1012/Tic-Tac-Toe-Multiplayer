@@ -15,7 +15,7 @@ def button_press(row, col):
             else:
                 ttt.send_move(move)
                 ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
-                fenster.after(100, wait_for_opponent_move)
+                fenster.after(300, wait_for_opponent_move)
 
 def wait_for_opponent_move():
     print("Waiting for opponent move")
