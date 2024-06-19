@@ -12,6 +12,20 @@ class TicTacToe:
         self.is_host = False
         self.lock = threading.Lock()
         self.current_turn = 'X'
+    
+    @property
+    def my_character(self):
+        if self.is_host:
+            return "X"
+        else:
+            return "O"
+    
+    @property
+    def opponent_character(self):
+        if self.is_host:
+            return "O"
+        else:
+            return "X"
 
     def decider(self):
         while True:
@@ -20,23 +34,7 @@ class TicTacToe:
                 print("Please decide between (c/j): ")
                 continue
             else:
-                if choice == "c":
-                    self.is_host = True
-                    self.current_turn = 'X'  
-                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.socket.bind(("", 55000))
-                    self.socket.listen(1)
-                    print("Waiting for connection...")
-                    self.conn, addr = self.socket.accept()
-                    print(f"Connected to {addr}")
-                    return choice
-                else:
-                    self.current_turn = 'O'
-                    ip = input("Please enter the IP-Address of the other player: ").strip()
-                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.socket.connect((ip, 55000))
-                    self.conn = self.socket
-                    return choice
+                return choice
 
     def checkwin(self):
         win_patterns = [
@@ -54,31 +52,32 @@ class TicTacToe:
         with self.lock:
             if self.field[move] == "X" or self.field[move] == "O":
                 return False
-            self.field[move] = self.current_turn
+            self.field[move] = self.my_character
             self.rep += 1
             return True
 
     def opponent_move(self, move):
         print("opponent move started")
         with self.lock:
-            self.field[move] = 'O' if self.current_turn == 'X' else 'X'
+            self.field[move] = self.opponent_character
             self.rep += 1
 
-    def activegame(self):
+    def activate_game(self):
         print("game is active")
         choice = self.decider()
         if choice == "c":
-            threading.Thread(target=self.host_game).start()
+            self.is_host = True
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.bind(("", 55000))
+            self.socket.listen(1)
+            print("Waiting for connection...")
+            self.conn, addr = self.socket.accept()
+            print(f"Connected to {addr}")
         else:
-            threading.Thread(target=self.join_game).start()
-
-    def host_game(self):
-        while not self.game_over:
-            pass  # Game will be handled by GUI
-
-    def join_game(self):
-        while not self.game_over:
-            pass  # Game will be handled by GUI
+            ip = input("Please enter the IP-Address of the other player: ").strip()
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.connect((ip, 55000))
+            self.conn = self.socket
 
     def send_move(self, move):
         print("sendig move")
