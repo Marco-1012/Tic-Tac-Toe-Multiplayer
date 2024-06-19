@@ -11,12 +11,20 @@ def check_result():
     """
     print("check results started")
     if ttt.checkwin():
+        Win_fenster = Tk()
         result = print(f"Player {ttt.current_turn} won!")
+        fenster.destroy()
+        win_label = Label(Win_fenster, text = f"Player {ttt.current_turn} won!")
+        win_label.pack()
         print("WON")
         end_game(result)
         return True
     elif ttt.rep == 10:
+        Win_fenster = Tk()
         print("Draw!")
+        fenster.destroy()
+        win_label = Label(Win_fenster, text = "Draw")
+        win_label.pack()
         end_game("Draw!")
         return True
     else:
@@ -54,6 +62,7 @@ buttons = []
 counter = [0]
 
 fenster = Tk()
+
 fenster.geometry("420x430")
 
 result_label = Label(fenster, text="", font=("Helvetica", 16))
