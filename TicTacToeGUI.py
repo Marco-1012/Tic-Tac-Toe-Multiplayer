@@ -11,7 +11,8 @@ def check_result():
     """
     print("check results started")
     if ttt.checkwin():
-        result = f"Player {ttt.current_turn} won!"
+        result = print(f"Player {ttt.current_turn} won!")
+        print("WON")
         end_game(result)
         return True
     elif ttt.rep == 10:
