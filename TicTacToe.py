@@ -7,7 +7,6 @@ class TicTacToe:
         self.socket = None
         self.conn = None
         self.field = [" "] * 10
-        self.game_over = False
         self.is_host = False
         self.lock = threading.Lock()
         self.current_turn = 'X'
@@ -26,7 +25,7 @@ class TicTacToe:
         else:
             return "X"
 
-    @staticmethod
+
     def decider(self):
         while True:
             choice = input("Do you want to create a game (c) or join a game (j): ").strip().lower()

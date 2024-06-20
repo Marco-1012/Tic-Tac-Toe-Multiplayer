@@ -19,7 +19,6 @@ def check_result():
         win_label = Label(win_fenster, text=f"Player {ttt.current_turn} won!")
         win_label.pack()
         print("WON")
-        end_game()
         return True
     elif ttt.rep == 10:
         win_fenster = Tk()
@@ -27,7 +26,6 @@ def check_result():
         fenster.destroy()
         win_label = Label(win_fenster, text="Draw")
         win_label.pack()
-        end_game()
         return True
     else:
         return False
@@ -50,15 +48,8 @@ def wait_for_opponent_move():
     row, col = divmod(move, 3)
     ttt.opponent_move(move)
     buttons[row][col].config(text=ttt.opponent_character, state=DISABLED)
-    if check_result() == False:
+    if not check_result():
         ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
-        
-
-def end_game():
-    ttt.game_over = True
-    for row in buttons:
-        for button in row:
-            button.config(state=DISABLED)
 
 
 buttons = []
