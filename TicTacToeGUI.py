@@ -10,10 +10,8 @@ def check_result():
     returns True when player has won or it's a draw 
             False if game is still going.
     """
-    print("check results started")
     if ttt.checkwin():
         win_fenster = Tk()
-        print(ttt.current_turn)
         print(f"Player {ttt.current_turn} won!")
         fenster.destroy()
         win_label = Label(win_fenster, text=f"Player {ttt.current_turn} won!")
