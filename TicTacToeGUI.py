@@ -49,7 +49,7 @@ def wait_for_opponent_move():
     buttons[row][col].config(text=ttt.opponent_character, state=DISABLED)
     if check_result() == False:
         ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
-        print("oponenet move ended")
+        
 
 def end_game(result):
     ttt.game_over = True
@@ -76,7 +76,7 @@ for r in range(3):
         row.append(b)
     buttons.append(row)
 
-ttt = TicTacToe("marco")
+ttt = TicTacToe()
 
 def start_game():
     ttt.activate_game()

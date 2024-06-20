@@ -2,8 +2,7 @@ import socket
 import threading
 
 class TicTacToe:
-    def __init__(self, username):
-        self.player = username
+    def __init__(self):
         self.rep = 1
         self.socket = None
         self.conn = None
@@ -47,8 +46,7 @@ class TicTacToe:
                 return True
         return False
 
-    def playermove(self, move):
-        print("playermove activated")
+    def playermove(self, move):   
         with self.lock:
             if self.field[move] == "X" or self.field[move] == "O":
                 return False
@@ -57,7 +55,6 @@ class TicTacToe:
             return True
 
     def opponent_move(self, move):
-        print("opponent move started")
         with self.lock:
             self.field[move] = self.opponent_character
             self.rep += 1
@@ -80,9 +77,7 @@ class TicTacToe:
             self.conn = self.socket
 
     def send_move(self, move):
-        print("sendig move")
         self.conn.sendall(str(move).encode())
 
     def receive_move(self):
-        print("recivieng move")
         return int(self.conn.recv(1024).decode())
