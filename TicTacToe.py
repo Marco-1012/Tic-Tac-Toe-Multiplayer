@@ -26,6 +26,7 @@ class TicTacToe:
         else:
             return "X"
 
+    @staticmethod
     def decider(self):
         while True:
             choice = input("Do you want to create a game (c) or join a game (j): ").strip().lower()

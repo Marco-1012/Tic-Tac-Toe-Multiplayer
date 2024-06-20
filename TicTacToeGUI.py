@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 background_thread = ThreadPoolExecutor(1)
 
+
 def check_result():
     """
     returns True when player has won or it's a draw 
@@ -11,21 +12,22 @@ def check_result():
     """
     print("check results started")
     if ttt.checkwin():
-        Win_fenster = Tk()
-        result = print(f"Player {ttt.current_turn} won!")
+        win_fenster = Tk()
+        print(ttt.current_turn)
+        print(f"Player {ttt.current_turn} won!")
         fenster.destroy()
-        win_label = Label(Win_fenster, text = f"Player {ttt.current_turn} won!")
+        win_label = Label(win_fenster, text=f"Player {ttt.current_turn} won!")
         win_label.pack()
         print("WON")
-        end_game(result)
+        end_game()
         return True
     elif ttt.rep == 10:
-        Win_fenster = Tk()
+        win_fenster = Tk()
         print("Draw!")
         fenster.destroy()
-        win_label = Label(Win_fenster, text = "Draw")
+        win_label = Label(win_fenster, text="Draw")
         win_label.pack()
-        end_game("Draw!")
+        end_game()
         return True
     else:
         return False
@@ -41,6 +43,7 @@ def button_press(row, col):
                 ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
                 background_thread.submit(wait_for_opponent_move)
 
+
 def wait_for_opponent_move():
     print("Waiting for opponent move")
     move = ttt.receive_move()
@@ -51,12 +54,12 @@ def wait_for_opponent_move():
         ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
         
 
-def end_game(result):
+def end_game():
     ttt.game_over = True
     for row in buttons:
         for button in row:
             button.config(state=DISABLED)
-    result_label.config(text=result)
+
 
 buttons = []
 counter = [0]
@@ -78,10 +81,12 @@ for r in range(3):
 
 ttt = TicTacToe()
 
+
 def start_game():
     ttt.activate_game()
     if ttt.current_turn != ttt.my_character:
         wait_for_opponent_move()
+
 
 background_thread.submit(start_game)
 
