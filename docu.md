@@ -217,4 +217,144 @@ def opponent_move(self, move):
 
 # GUI
 
-Dani mach des!!
+The Goal is to play the TicTacToe Multiplayer with a graphic interface
+
+# Modules needed
+
+We need to import modules in order to make the GUI work:
+
+```python
+from tkinter import *
+from TicTacToe import TicTacToe
+from concurrent.futures import ThreadPoolExecutor
+```
+
+The module TicTacToe is the imported function from the TicTacToe script. We need to implement in order to make it
+possible to use the functions in the script.
+
+# Button press function
+
+First we nee a function which let's the programm know, if there is a win or a draw:
+
+```python
+def check_result():
+    """
+    returns True when player has won or it's a draw 
+            False if game is still going.
+    """
+    print("check results started")
+    if ttt.checkwin():
+        Win_fenster = Tk()
+        result = print(f"Player {ttt.current_turn} won!")
+        fenster.destroy()
+        win_label = Label(Win_fenster, text = f"Player {ttt.current_turn} won!")
+        win_label.pack()
+        print("WON")
+        end_game(result)
+        return True
+    elif ttt.rep == 10:
+        Win_fenster = Tk()
+        print("Draw!")
+        fenster.destroy()
+        win_label = Label(Win_fenster, text = "Draw")
+        win_label.pack()
+        end_game("Draw!")
+        return True
+    else:
+        return False
+```
+
+The checkwin function from the Tictactoe script is used to check if there is a win or a draw and to let the players know who won a
+a new window will pop up and display if player **X**, player **O** wins or a draw happens
+
+Next we need a function that lets the programm know which Button to disable 
+
+```python
+def button_press(row, col):
+    if ttt.current_turn == ttt.my_character: 
+        move = row * 3 + col
+        if ttt.playermove(move):
+            buttons[row][col].config(text=ttt.current_turn, state=DISABLED)
+            ttt.send_move(move)
+            if not check_result():
+                ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+                background_thread.submit(wait_for_opponent_move)
+```
+And the __**ttt.my_character**__ is a property defined in the TicTacToe script:
+
+```python
+@property
+    def my_character(self):
+        if self.is_host:
+            return "X"
+        else:
+            return "O"
+    
+    @property
+    def opponent_character(self):
+        if self.is_host:
+            return "O"
+        else:
+            return "X"
+```
+It is also important to know that ttt is the Object from the TicTacToe script and is defined a little later:
+
+```python
+ttt = TicTacToe("marco")
+```
+It is checked if the player is the Host. The Host always begins and has the X.
+If the player makes a move it is checked with the **playermove** Function. After it is checked the correspondig Button is disabled
+and replaced with X or O
+
+After ever round it is checked if there is a winner with the function **check_result**. If somone won the current player will get a message saying "won".
+
+# Wait for opponent move Funtion
+
+This function does like the name implies wat for the opponent to move
+
+```python
+def wait_for_opponent_move():
+    print("Waiting for opponent move")
+    move = ttt.receive_move()
+    row, col = divmod(move, 3)
+    ttt.opponent_move(move)
+    buttons[row][col].config(text=ttt.opponent_character, state=DISABLED)
+    if check_result() == False:
+        ttt.current_turn = 'O' if ttt.current_turn == 'X' else 'X'
+        print("oponenet move ended")
+```
+
+It waits to receive a move from the other player. 
+After that the funtcion checks if there is a win or a draw and rewards the player who won
+At the end of this function it checks if it needs to replace the button with O or with X
+
+# End game
+
+Now we have to know when the game is over.
+
+```python
+def end_game(result):
+    ttt.game_over = True
+    for row in buttons:
+        for button in row:
+            button.config(state=DISABLED)
+    result_label.config(text=result)
+
+```
+If the game over variable from the Script is **True** it disables all Buttons and changes the Label to **result**
+
+# Changes to TicTacToe script
+
+In order to make the two codes work together we have to change the TicTacToe script too.
+
+First we need to add some things to the **__innit__** funktion:
+
+The Function **printfield** was removed because it isn't neede anymore when the game is  played with the GUI:
+
+```python
+ def printfield(self):
+        print(self.field[1] + "|" + self.field[2] + "|" + self.field[3])
+        print(self.field[4] + "|" + self.field[5] + "|" + self.field[6])
+        print(self.field[7] + "|" + self.field[8] + "|" + self.field[9])
+```
+
